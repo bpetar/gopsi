@@ -1,2 +1,2 @@
 # gopsi
-gopsi backend
+gopsi react native frontend and laravel backend
