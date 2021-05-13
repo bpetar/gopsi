@@ -3,8 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\User;
+use App\Task;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+
+use App\Http\Controllers\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +27,20 @@ use Illuminate\Validation\ValidationException;
 Route::middleware('auth:airlock')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('auth:airlock')->get('/tasks', function (Request $request) {
+    return Task::all();
+});
+
+Route::middleware('auth:airlock')->get('/tasks/{id}', function ($id) {
+    //\Log::info('Oce se api ruta task: ' . $id);
+    return Task::where('client_id', $id)->get();
+});
+
+/*Route::get('tasks', function () {
+
+    return Task::all();
+});*/
 
 Route::middleware('auth:airlock')->post('/logout', function (Request $request) {
     $request->user()->tokens()->delete();

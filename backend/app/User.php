@@ -37,4 +37,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the author for the user.
+     */
+    public function author()
+    {
+        return $this->hasOne('App\Author');
+    }
 }
