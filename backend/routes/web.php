@@ -21,6 +21,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//Route::get('/client/task/create', 'TaskController@create')->name('show_client_create');
+Route::post('/client/add', 'HomeController@addClient')->name('add_client');
+Route::get('/client/remove', 'HomeController@removeClient')->name('remove_client');
+Route::get('/client/create', 'HomeController@showClientCreate')->name('show_client_create');
+Route::get('/client/{id}', 'HomeController@showClient')->name('show_client');
+
 Route::resource('tasks','TaskController');
 Route::resource('authors','AuthorController');
 

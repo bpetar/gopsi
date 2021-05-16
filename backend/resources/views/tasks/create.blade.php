@@ -2,24 +2,33 @@
 
 
 @section('content')
-	
+    
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Create New Article</div>
-                <div class="panel-body">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <p><a href="/client/{{ Request::get('client_id') }}"><- Back to client</a></p>
+            @if (auth()->check())
+            @if (auth()->user()->id == 1  || auth()->user()->isAuthor() == 'true')
+            <div class="card">
+                <div class="card-header">Create New Task</div>
+                <div class="card-body">
 
-			{!! Form::open(array('url' => URL::to('/articles'), 'method' => 'post', 'class'=>'form-horizontal', 'files' => true)) !!}
+                {!! Form::open(array('url' => URL::to('/tasks'), 'method' => 'post', 'class'=>'form-horizontal', 'files' => true)) !!}
 
-			@include('articles.partials.form')
+                @include('tasks.partials.form')
 
-			{!! Form::close() !!}
+                {{--Task Client Id - invisible field--}}
+                {{ Form::hidden('client_id', Request::get('client_id')) }}
+                </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                {!! Form::close() !!}
+
+                </div>
+            </div>
+            @endif
+            @endif
+        </div>
+    </div>
 </div>
 
 @stop

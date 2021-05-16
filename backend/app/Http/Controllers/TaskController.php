@@ -15,18 +15,18 @@ class TaskController extends Controller
     public function index()
     {
         //
-        if(!Auth::user())
-            {
-                dd('there was problem saying you are not logged in');
-                return;
-            }
+        if (!Auth::user())
+        {
+            dd('there was problem saying you are not logged in');
+            return;
+        }
 
         // check if author logged in
-        if(!Auth::user()->author)
-            {
-                dd('there was problem saying you are not author');
-                return;
-            }
+        if (!Auth::user()->author)
+        {
+            dd('there was problem saying you are not author');
+            return;
+        }
 
         $tasks = Task::where('author_id', Auth::user()->id)->get();
 
@@ -40,7 +40,11 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        //check if get route has param 'client_id'
+        if (request()->has('client_id'))
+            $client_id = request()->client_id;
+
+        return view('tasks.create', compact('client_id'));
     }
 
     /**
@@ -52,6 +56,28 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         //
+        if (!Auth::user())
+        {
+            dd('there was problem saying you are not logged in');
+            return;
+        }
+
+        if (!Auth::user()->author())
+        {
+            dd('there was problem saying you are not author');
+            return;
+        }
+
+        $inss = $request->all();
+        $inss['status'] = 'new';
+        $inss['image'] = '';
+        $inss['client_notes'] = '';
+        $inss['author_id'] = Auth::user()->id;
+        $task = Task::create($inss);
+
+        $task->save();
+
+        return redirect('client/' . $inss['client_id']);
     }
 
     /**
@@ -62,8 +88,9 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        //
+        // find specified task
         $task = Task::findOrFail($id);
+
         return view('tasks.show', compact('task'));
     }
 
@@ -75,7 +102,31 @@ class TaskController extends Controller
      */
     public function edit($id)
     {
-        //
+        // not logged in, no editing tasks
+        if (!Auth::user())
+        {
+            dd('there was problem saying you are not logged in');
+            return;
+        }
+
+        // check if user is author
+        if (!Auth::user()->author() && Auth::user()->id != 1)
+        {
+            dd('there was problem saying you are not author');
+            return;
+        }
+
+        // find specified task
+        $task = Task::findOrFail($id);
+
+        // check if author is editing his task
+        if (Auth::user()->id != $task->author_id && Auth::user()->id != 1)
+        {
+            dd('there was problem saying you are not author of this task');
+            return;
+        }
+
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -87,7 +138,34 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // not logged in, no updating tasks
+        if (!Auth::user())
+        {
+            dd('there was problem saying you are not logged in');
+            return;
+        }
+
+        // check if user is author
+        if (!Auth::user()->author() && Auth::user()->id != 1)
+        {
+            dd('there was problem saying you are not author');
+            return;
+        }
+
+        // find specified task
+        $task = Task::findOrFail($id);
+
+        // check if author is updating his task
+        if (Auth::user()->id != $task->author_id && Auth::user()->id != 1)
+        {
+            dd('there was problem saying you are not author of this task');
+            return;
+        }
+
+        // update it
+        $task->update($request->all());
+
+        return redirect('client/' . $task->client_id);
     }
 
     /**
@@ -98,6 +176,38 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // not logged in, no deleting tasks
+        if (!Auth::user())
+            {
+                dd('there was problem saying you are not logged in');
+                return;
+            }
+
+        // check if user is author
+        if (!Auth::user()->author() && Auth::user()->id != 1)
+            {
+                dd('there was problem saying you are not author');
+                return;
+            }
+
+        // find specified task
+        $task = Task::findOrFail($id);
+
+        // check if author created this task or super user
+        if (!Auth::user()->author() && Auth::user()->id != 1)
+        {
+            dd('there was problem saying you are not author of this task');
+            return;
+        }
+
+        $client_id = $task->client_id;
+
+        $task->delete();
+
+         //log write about deleted task
+        \Log::info('Deleting task: ' . $id);
+
+        return redirect('client/' . $client_id);
+
     }
 }

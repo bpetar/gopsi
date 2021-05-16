@@ -11,7 +11,10 @@ class Task extends Model
     	'title',
     	'description',
         'author_id',
-        'client_id'
+        'client_id',
+        'status',
+        'image',
+        'client_notes'
     ];
 
     

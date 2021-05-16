@@ -18,11 +18,11 @@ class Author extends Model
     }
 
     /**
-     * Get the user for the author.
+     * Get the clients for the author.
      */
-    public function user()
+    public function users()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsToMany('App\User');
     }
 
 }

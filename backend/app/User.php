@@ -39,10 +39,37 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the author for the user.
+     * Get the authors for the user.
+     */
+    public function authors()
+    {
+        return $this->belongsToMany('App\Author');
+    }
+
+    /**
+     * Get is user is author.
+     */
+    public function isAuthor()
+    {
+        $author = Author::where('user_id', $this->id)->get();
+        return count($author) != 0 ? 'true' : 'false';
+    }
+
+    /**
+     * Get author model if this user is author.
      */
     public function author()
     {
-        return $this->hasOne('App\Author');
+        $author = Author::where('user_id', $this->id)->get();
+        return $author;
+    }
+
+    /**
+     * Get author model if this user is author.
+     */
+    public function getClients()
+    {
+        $author = Author::where('user_id', $this->id)->get();
+        return $author->users()->get();
     }
 }

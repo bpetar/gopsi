@@ -4,21 +4,25 @@
 @section('content')
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Edit: {{$article->title}}
-                </div>
-                <div class="panel-body">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <p><a href="/client/{{ $task->client_id }}"><- Back to client</a></p>
+            @if (auth()->check())
+            @if (auth()->user()->id == 1  || auth()->user()->isAuthor() == 'true')
+            <div class="card">
+                <div class="card-header">Edit Task</div>
+                <div class="card-body">
 
-            {!! Form::model($article, array('url' => URL::to('/articles/' . $article->id), 'class'=>'form-horizontal', 'method' => 'PUT', 'files' => true)) !!}
+                {!! Form::model($task, array('url' => URL::to('/tasks/' . $task->id), 'class'=>'form-horizontal', 'method' => 'PUT', 'files' => true)) !!}
 
-            @include('articles.partials.form')
+                @include('tasks.partials.form')
 
-            {!! Form::close() !!}
+                {!! Form::close() !!}
 
                 </div>
             </div>
+            @endif
+            @endif
         </div>
     </div>
 </div>
