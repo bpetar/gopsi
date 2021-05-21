@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 
-type User = null | { username: string };
+type User = null | { email: string, token: string, id: number };
 
 axios.defaults.baseURL = 'http://192.168.0.19:8000';
 
@@ -14,7 +14,7 @@ export const AuthContext = React.createContext<{
   logout: () => void;
 }>({
   user: null,
-  error: null,
+  error: '',
   setUser: (user: User) => {}, 
   login: (email: string, password: string) => {},
   logout: () => {}
@@ -41,6 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const userResponse = {
               email: response.data.user.email,
               token: response.data.token,
+              id: response.data.user.id,
             }
             console.log(userResponse);
             setUser(userResponse);

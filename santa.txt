@@ -1,0 +1,76 @@
++ web: author list clients, add client by email, remove client
++ web: author add task to client, remove, edit
++ mob: show done tasks
++ mob: move task to done
++ web: solve nullable problem, redo migration
+- mob: RefreshControl
+- mob: add notes
+- mob: make android apk
+- mob: show error if api fetch tasks fails
+- web: show number of tasks for each client in home blade
+- web: maybe protect from adding yourself as a client?
+- web: group clients, order latest, archive
+- web: encode tasks in database
+- web: add tab for done tasks
+- mob: client should be able to select one author
+
+php artisan make:migration create_authors_users_table
+
+
+php artisan make:auth
+php artisan make:model Article -m
+php artisan make:controller ArticleController --resource
+php artisan make:migration change_body_of_articles
+php artisan migrate
+php artisan make:middleware SetLanguage
+
+php artisan tinker
+
+$user = User::find(1);
+$author = Author::find(1);
+$user->authors()->attach($author);
+
+$user = new App\User;
+$user->name = "Klijent Tri";
+$user->email = "tri@klijent.com";
+$user->password = bcrypt('password');
+$user->save();
+
+$author = new App\Author;
+$author->name = "Dr Sindarin"
+$author->title = 'Begunista Therapista';
+$author->biography = '';
+$author->image = '';
+$author->user_id = '3';
+$author->save();
+
+
+$author = new App\Author;
+$author->name = "Dr Gorana Rakic-Bajic"
+$author->title = 'Transactional Therapist';
+$author->biography = '';
+$author->image = '';
+$author->user_id = '2';
+$author->save();
+
+$task = new App\Task;
+$task->image = '';
+$task->title = 'Second DB Task';
+$task->description = 'Write down some happy thoughts.';
+$task->client_id = 1;
+$task->author_id = 2;
+$task->status = 'new';
+$task->client_notes = '';
+$task->save();
+App\task::all();
+
+$task = new App\Task;
+$task->image = '';
+$task->title = 'Third DB Task';
+$task->description = 'Write down some begunia thoughts.';
+$task->client_id = 1;
+$task->author_id = 3;
+$task->status = 'done';
+$task->client_notes = '';
+$task->save();
+App\task::all();

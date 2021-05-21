@@ -32,9 +32,22 @@ Route::middleware('auth:airlock')->get('/tasks', function (Request $request) {
     return Task::all();
 });
 
-Route::middleware('auth:airlock')->get('/tasks/{id}', function ($id) {
+Route::middleware('auth:airlock')->get('/dones/{client_id}', function (Request $request, $client_id) {
+    \Log::info('Dones se api ruta task: ' . $client_id);
+    $author_id = $request->user()->authors()->first()->user_id;
+    return Task::where('client_id', $client_id)->where('author_id', $author_id)->where('status', 'done')->get();
+});
+
+Route::middleware('auth:airlock')->put('/tasks/{task}',  function (Request $request, Task $task) {
+    \Log::info('Oce se api put ruta task: ' . $task->client_id);
+    $task->update($request->all());
+    return response()->json($task, 200);
+});
+
+Route::middleware('auth:airlock')->get('/tasks/{client_id}', function (Request $request, $client_id) {
     //\Log::info('Oce se api ruta task: ' . $id);
-    return Task::where('client_id', $id)->get();
+    $author_id = $request->user()->authors()->first()->user_id;
+    return Task::where('client_id', $client_id)->where('author_id', $author_id)->where('status', 'new')->get();
 });
 
 /*Route::get('tasks', function () {

@@ -28,7 +28,11 @@ class HomeController extends Controller
     public function index()
     {
         $author = Author::where('user_id', Auth::user()->id)->first();
-        $clients = $author->users->all();
+        if ($author) {
+            $clients = $author->users->all();
+        } else {
+            $clients = [];
+        }
         //$tasks = Task::where('author_id', Auth::user()->id)->get();
         return view('home', compact('clients'));
     }

@@ -18,10 +18,10 @@ class CreateTasksTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('status');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('author_id')->unsigned();
             $table->integer('client_id')->unsigned();
-            $table->longtext('client_notes');
+            $table->longtext('client_notes')->nullable();
             $table->timestamps();
         });
     }

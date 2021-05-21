@@ -5,57 +5,92 @@ import { Text, TouchableOpacity, FlatList, Button, StyleSheet, TextInput, Scroll
 import { AuthContext } from "./AuthProvider";
 import { HomeParamList, HomeStackNavProps } from "./HomeParamList";
 import Card from '../components/Card';
+import axios from 'axios';
 
 interface HomeStackProps {}
+type User = null | { email: string, token: string, id: number };
+type Task = null | { name: string, description: string, id: number };
+const defaultTasks: Task[] = [];
 
 const Stack = createStackNavigator<HomeParamList>();
 
 function Feed({ navigation }: HomeStackNavProps<"Feed">) {
-  return (
-    <ScrollView>
-    <View style={styles.container}>
-      <Card style={styles.card}> 
-        <Text style={styles.title}>Moj prvi card task</Text>
-        <Text style={styles.description}>Prvi card task ima malo duzi description koji prelazi u dva reda.</Text>
-        <TextInput style={{color: 'gray', borderColor: '#c1d1c1', padding: 10, borderWidth: 1}}
-        defaultValue="My notes..."
-        />
-        <Button color="#91c49f" title="Complete" onPress={() => Alert.alert('Complete is yet to be completed.')}/>
-      </Card>
-      <Card style={styles.card}> 
-        <Text style={styles.title}>Moj drugi card task</Text>
-        <Text style={styles.description}>Drugi card task ima isto malo duzi description koji prelazi u dva reda, a mozda i tri, cetiri. Za promenu.</Text>
-        <TextInput style={{ color: 'gray', borderColor: '#c1d1c1', padding: 10, borderWidth: 1}}
-        defaultValue="My notes..."
-        />
-        <Button color="#91c49f" title="Complete" onPress={() => Alert.alert('Complete is yet to be completed.')}/>
-      </Card>
-      <Card style={styles.card}> 
-        <Text style={styles.title}>Moj cetvrti card task</Text>
-        <Text style={styles.description}>Drugi card task ima isto malo duzi description koji prelazi u dva reda, a mozda i tri, cetiri. Za promenu.</Text>
-        <TextInput style={{ color: 'gray', borderColor: '#c1d1c1', padding: 10, borderWidth: 1}}
-        defaultValue="My notes..."
-        />
+  const { user } = useContext(AuthContext);
+  const [tasks, setTasks] = useState<Task[]>(defaultTasks);
 
-        <Pressable
-          onPress={() => {
-            Alert.alert('Complete is yet to be completed.');
-          }}
-          style={styles.buttonRectangle}>
-          {({ pressed }) => (
-            <Text style={styles.buttonText}>
-              COMPLETE
-            </Text>
-          )}
-        </Pressable>
+  useEffect(() => {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+    axios.get(`/api/tasks/${user.id}`)
+    .then(response => {
+      console.log(response.data);
+      setTasks(response.data);
+      console.log(tasks);
+    })
+    .catch(error => {
+      console.log('ok'+error.response);
+    })
+  }, []);
 
-      </Card>
-    </View>
-    </ScrollView>
-    /*<Center>
+  if (tasks.length > 0)
+    return (
+      <ScrollView>
+      <View style={styles.container}>
+        {tasks.map((item) => (
+          <Card key={item.id} style={styles.card}> 
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.description}>{item.description}</Text>
+            <TextInput style={{color: 'gray', borderColor: '#c1d1c1', padding: 10, borderWidth: 1}}
+            defaultValue="My notes..."
+            />
+            <Button color="#91c49f" title="Complete" 
+              onPress={() => {
+                Alert.alert('Compelete is yet to be completed.')
+                item.status = 'done';
+                item.image = '';
+                item.client_notes = '';
+                axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+                axios.put(`/api/tasks/${item.id}`, item)
+                .then(response => {
+                  console.log(response.data);
+                  setTasks(response.data);
+                  console.log(tasks);
+                })
+                .catch(error => {
+                  console.log(error.response);
+                })
+              }}/>
+          </Card>
+        ))}
+
+        {/*<Card style={styles.card}> 
+          <Text style={styles.title}>Moj treci card task</Text>
+          <Text style={styles.description}>Treci card task ima isto malo duzi description koji prelazi u dva reda, a mozda i tri, cetiri. Za promenu.</Text>
+          <TextInput style={{ color: 'gray', borderColor: '#c1d1c1', padding: 10, borderWidth: 1}}
+          defaultValue="My notes..."
+          />
+
+          <Pressable
+            onPress={() => {
+              Alert.alert('Complete is yet to be completed.');
+            }}
+            style={styles.buttonRectangle}>
+            {({ pressed }) => (
+              <Text style={styles.buttonText}>
+                COMPLETE
+              </Text>
+            )}
+          </Pressable>
+
+        </Card>*/}
+      </View>
+      </ScrollView>
+      );
+  else
+    return (
+    <Center>
       <Text>No tasks at the moment.</Text>
-    </Center>*/
-  );
+    </Center>
+    );
 }
 
 export const HomeStack: React.FC<HomeStackProps> = ({}) => {
