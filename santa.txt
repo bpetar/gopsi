@@ -3,7 +3,7 @@
 + mob: show done tasks
 + mob: move task to done
 + web: solve nullable problem, redo migration
-- mob: RefreshControl
++ mob: RefreshControl
 - mob: add notes
 - mob: make android apk
 - mob: show error if api fetch tasks fails
@@ -13,6 +13,7 @@
 - web: encode tasks in database
 - web: add tab for done tasks
 - mob: client should be able to select one author
+- mob: when task marked as done -> refresh done list
 
 php artisan make:migration create_authors_users_table
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SearchParamList } from "./SearchParamList";
-import { Button, FlatList, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, View } from "react-native";
+import { Button, FlatList, Text, TextInput, StyleSheet, TouchableOpacity, RefreshControl, ScrollView, View } from "react-native";
 import { AuthContext } from "./AuthProvider";
 import { Center } from "./Center";
 import Card from '../components/Card';
@@ -18,22 +18,39 @@ const Stack = createStackNavigator<SearchParamList>();
 function Search({ navigation }) {
   const { user } = useContext(AuthContext);
   const [tasks, setTasks] = useState<Task[]>(defaultTasks);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  function pullTasks() {
     axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
     axios.get(`/api/dones/${user.id}`)
     .then(response => {
       console.log(response.data);
       setTasks(response.data);
-      console.log(tasks);
+      //console.log(tasks);
     })
     .catch(error => {
-      console.log(error.response);
+      console.log('ok'+error.response);
     })
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    //wait(2000).then(() => setRefreshing(false));
+    console.log('refreshing');
+    pullTasks();
+    setRefreshing(false);
   }, []);
 
+  useEffect(pullTasks, []);
+
+  if (tasks.length > 0)
   return (
-    <ScrollView>
+    <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
     <View style={styles.container}>
       {tasks.map((item) => (
         <Card key={item.id} style={styles.card}> 
@@ -68,6 +85,19 @@ function Search({ navigation }) {
     </View>
     </ScrollView>
   );
+  else
+    return (
+      <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
+        <Center>
+          <Text>No tasks at the moment.</Text>
+        </Center>
+      </ScrollView>
+    );
 }
 
 export const SearchStack: React.FC<SearchStackProps> = ({}) => {
