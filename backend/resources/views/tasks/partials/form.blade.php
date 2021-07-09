@@ -35,6 +35,22 @@
 	</div>
 </div>
 
+{{--Task Repeat--}}
+<div class="form-group{{ $errors->has('repeat') ? ' has-error' : '' }}">
+
+	<label for="repeat" class="col-md-4 control-label">Repetition</label>
+
+	<div class="col-md-6">
+	    {!! Form::text('repeat', null, array('class' => 'form-control', 'placeholder'=> 'Enter repeat count here..')) !!}
+
+	    @if ($errors->has('repeat'))
+	        <span class="help-block">
+	            <strong>{{ $errors->first('repeat') }}</strong>
+	        </span>
+	    @endif
+	</div>
+</div>
+
 <br>
 
 <div class="form-group">

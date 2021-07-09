@@ -14,7 +14,9 @@ class Task extends Model
         'client_id',
         'status',
         'image',
-        'client_notes'
+        'client_notes',
+        'repeat',
+        'counter'
     ];
 
     

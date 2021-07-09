@@ -71,8 +71,18 @@ class TaskController extends Controller
         $inss = $request->all();
         $inss['status'] = 'new';
         $inss['image'] = '';
+        $inss['counter'] = 0;
         $inss['client_notes'] = '';
         $inss['author_id'] = Auth::user()->id;
+
+        // CHECK REPEAT IS INTEGER
+        $value = $inss['repeat'];
+        $strVal = strval(intval($value));
+        $intVal = strval($value);
+        if ($strVal != $intVal) {
+            $inss['repeat'] = 0;
+        }
+
         $task = Task::create($inss);
 
         $task->save();
@@ -162,8 +172,17 @@ class TaskController extends Controller
             return;
         }
 
+        // CHECK REPEAT IS INTEGER
+        $inss = $request->all();
+        $value = $inss['repeat'];
+        $strVal = strval(intval($value));
+        $intVal = strval($value);
+        if ($strVal != $intVal) {
+            $inss['repeat'] = 0;
+        }
+
         // update it
-        $task->update($request->all());
+        $task->update($inss);
 
         return redirect('client/' . $task->client_id);
     }

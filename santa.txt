@@ -4,16 +4,26 @@
 + mob: move task to done
 + web: solve nullable problem, redo migration
 + mob: RefreshControl
-- mob: add notes
-- mob: make android apk
-- mob: show error if api fetch tasks fails
++ mob: add notes
++ mob: make android apk (rewritting whole app to be expo and typescript free)
++ mob: show error if api fetch tasks fails
++ mob: add notes modal
++ mob: add nice tab icons
++ mob: notes in done
++ mob: when task marked as done -> refresh done list
++ mob: add task counter
++ web: add task counter
+- web: move to mystic peanut
 - web: show number of tasks for each client in home blade
 - web: maybe protect from adding yourself as a client?
 - web: group clients, order latest, archive
 - web: encode tasks in database
 - web: add tab for done tasks
 - mob: client should be able to select one author
-- mob: when task marked as done -> refresh done list
+- mob: add delete done taks
+- mob: done task to say: "Completed on May 14, 2021."
+- mob: make task counter popup notes with date
+
 
 php artisan make:migration create_authors_users_table
 
