@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://192.168.0.23:8000';
+axios.defaults.baseURL = 'https://gopsi.mystic-peanut.com';
+//axios.defaults.baseURL = 'http://192.168.0.162:8000/';
 
 export const AuthContext = React.createContext({});
 
 export const AuthProvider = ({children}) => {
+
+
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 

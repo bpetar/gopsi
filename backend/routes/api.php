@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\User;
 use App\Task;
+use App\Author;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -39,13 +40,28 @@ Route::middleware('auth:airlock')->get('/dones/{client_id}', function (Request $
 });
 
 Route::middleware('auth:airlock')->put('/tasks/{task}',  function (Request $request, Task $task) {
-    \Log::info('Oce se api put ruta task: ' . $task->client_id);
+    \Log::info('Oce se api put ruta task: ' . $task->author_id);
     $task->update($request->all());
+
+    $user = User::where('id', $task->client_id)->first();
+    $userAuthor = User::where('id', $task->author_id)->first();
+    $taskTitle = $request->all()['title'];
+    \Log::info('ako je done, saljemo mail authoru: ' . $request->all()['status'] . ' email: ' . $userAuthor->email);
+    if ($request->all()['status'] == 'done') {
+        Mail::send([], [], function ($message) use ($user, $userAuthor,$taskTitle) {
+          $message->to($userAuthor->email)
+            ->subject('User ' . $user->name . ' completed the task.')
+            ->setBody('<h1>Task completed!</h1><p>User ' . $user->name . ' completed the task.</p>
+            <p>Task: ' . $taskTitle . '</p>
+            <p>Status: <span style="color: green">done</span>.</p>', 'text/html'); // for HTML rich messages
+        });
+    }
+
     return response()->json($task, 200);
 });
 
 Route::middleware('auth:airlock')->get('/tasks/{client_id}', function (Request $request, $client_id) {
-    //\Log::info('Oce se api ruta task: ' . $id);
+    \Log::info('Oce se api ruta task: ' . $client_id);
     $author_id = $request->user()->authors()->first()->user_id;
     return Task::where('client_id', $client_id)->where('author_id', $author_id)->where('status', 'new')->get();
 });

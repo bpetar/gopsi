@@ -13,21 +13,33 @@
 + mob: when task marked as done -> refresh done list
 + mob: add task counter
 + web: add task counter
-- web: move to mystic peanut
++ web: move to mystic peanut
++ web: order of tasks newest first
++ web: archive clients
++ web: see the notes
++ web: send email to author when task done
++ web: add tab for done tasks
+- web: link says 'Laravel'
+- web: link has no image og
+- web: in the list of clients add "Last task added on 14th May"
 - web: show number of tasks for each client in home blade
 - web: maybe protect from adding yourself as a client?
 - web: group clients, order latest, archive
 - web: encode tasks in database
-- web: add tab for done tasks
++ mob: reminder for repeating task trigger notification after 24h
+- mob: new task added notification
+- mob: register client by mob
++ mob: make spinner spin after pressing complete (prevent double press)
 - mob: client should be able to select one author
 - mob: add delete done taks
 - mob: done task to say: "Completed on May 14, 2021."
 - mob: make task counter popup notes with date
+- mob: maybe revert to use react-native-vector-icons
 
 
 php artisan make:migration create_authors_users_table
-
-
+	
+	
 php artisan make:auth
 php artisan make:model Article -m
 php artisan make:controller ArticleController --resource

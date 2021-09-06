@@ -25,4 +25,20 @@ class Author extends Model
         return $this->belongsToMany('App\User');
     }
 
+    /**
+     * Get the archived clients for the author.
+     */
+    public function archived()
+    {
+        return $this->belongsToMany('App\User')->wherePivot('archived', 1);
+    }
+
+    /**
+     * Get the active clients for the author.
+     */
+    public function active()
+    {
+        return $this->belongsToMany('App\User')->wherePivot('archived', 0);
+    }
+
 }

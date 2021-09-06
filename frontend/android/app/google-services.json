@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "16289932814",
+    "project_id": "gopsi-b0ef4",
+    "storage_bucket": "gopsi-b0ef4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16289932814:android:aa8a6048cbc752144bfe5f",
+        "android_client_info": {
+          "package_name": "com.gopsi1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "16289932814-tl425tnkjhdupg21rfnr9ju2lvtmigih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhbJFMPiNp13oYBESjWaXeU27f7jeQRxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "16289932814-tl425tnkjhdupg21rfnr9ju2lvtmigih.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16289932814:android:eb182abbc8dec42d4bfe5f",
+        "android_client_info": {
+          "package_name": "com.mysticp.gopsi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "16289932814-tl425tnkjhdupg21rfnr9ju2lvtmigih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhbJFMPiNp13oYBESjWaXeU27f7jeQRxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "16289932814-tl425tnkjhdupg21rfnr9ju2lvtmigih.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

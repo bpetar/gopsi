@@ -4,6 +4,7 @@ import { Text, Modal, TouchableOpacity, Button, StyleSheet, TextInput, RefreshCo
 import { AuthContext } from "./AuthProvider";
 import Card from '../components/Card';
 import axios from 'axios';
+import { ScheduleLocalNotification, CancelLocalNotifications } from './LocalPushController'
 
 const defaultTasks = [];
 
@@ -20,6 +21,15 @@ function Feed() {
   const [modalItem, setModalItem] = useState(null);
   const [modalNotes, setModalNotes] = useState(null);
 
+  React.useEffect(() => {
+	console.log(tasks);
+	for (let i=0; i<tasks.length; i++) {
+	  console.log('setting my baby notification ' + i);
+	  ScheduleLocalNotification(tasks[i].id, tasks[i].title, tasks[i].description);  
+	}
+  }, [tasks]);
+
+
   function pullTasks() {
     console.log('pullTasks');
     setRefreshing(true);
@@ -27,9 +37,12 @@ function Feed() {
     axios.defaults.timeout = 1000;
     axios.get(`/api/tasks/${user.id}`)
     .then(response => {
-      console.log('pera1 ' + response.data);
+      console.log('pera1k ' + response.data);
+	  for (let i=0; i<response.data.length; i++) {
+		  response.data[i].processing = false;
+	  }
+	  CancelLocalNotifications()
       setTasks(response.data);
-      console.log(tasks);
       setRefreshing(false);
     })
     .catch(exception => {
@@ -116,8 +129,14 @@ function Feed() {
 
               <Text style={styles.client_notes} onPress={() => showModalNotes(item)}>{item.client_notes ? item.client_notes : "(Tap here to enter notes)"}</Text>
 
-              <Button color="#91c49f" title={ item.repeat > 0 ? "Complete " + item.counter + "/" + item.repeat : "Complete"}
+              <Button color={item.processing == true ? "#a1b4af" : "#91c49f"} title={ item.repeat > 0 ? "Complete " + item.counter + "/" + item.repeat : "Complete"}
                 onPress={() => {
+				  if (item.processing == true) {
+					  console.log('dzabe pritiskas');
+					  return;
+				  }
+				  item.processing = true;
+				  setRefreshing(true);
                   if (item.repeat == 0 || item.repeat <= item.counter + 1) {
                     item.status = 'done';
                     item.image = '';
@@ -126,13 +145,13 @@ function Feed() {
                     axios.put(`/api/tasks/${item.id}`, item)
                     .then(response => {
                       console.log('pera3 ' + response.data);
-                      //setTasks(response.data);
                       pullTasks(); //refresh the list
                       console.log(response.data);
                       console.log(tasks);
                     })
                     .catch(error => {
                       console.log(error.response);
+					  setRefreshing(false);
                     })
                   } else {
                     item.counter++;
@@ -147,6 +166,7 @@ function Feed() {
                     })
                     .catch(error => {
                       console.log(error.response);
+					  setRefreshing(false);
                     })
                   }
                 }}/>
