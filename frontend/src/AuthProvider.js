@@ -48,6 +48,35 @@ export const AuthProvider = ({children}) => {
             //SecureStore.setItemAsync('user', JSON.stringify(userResponse));
           })
           .catch(error => {
+            console.log('pera login');
+            console.log(error);
+            const key = Object.keys(error.response.data.errors)[0];
+            setError(error.response.data.errors[key][0]);
+          })
+        },
+        register: (name, email, password) => {
+          axios.post('/api/users', {
+            name,
+            email,
+            password,
+            device_name: 'mobile',
+          })
+          .then(response => {
+            const userResponse = {
+              email: response.data.user.email,
+              token: response.data.token,
+              id: response.data.user.id,
+            }
+            console.log(userResponse);
+            setUser(userResponse);
+            setError(null);
+            storeUserData(JSON.stringify(userResponse))
+
+            //SecureStore.setItemAsync('user', JSON.stringify(userResponse));
+          })
+          .catch(error => {
+            console.log('pera');
+            console.log(error);
             const key = Object.keys(error.response.data.errors)[0];
             setError(error.response.data.errors[key][0]);
           })
@@ -63,6 +92,7 @@ export const AuthProvider = ({children}) => {
           })
           .catch(error => {
             console.log(error.response);
+            setUser(null);
           })
         }
       }}>

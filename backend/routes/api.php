@@ -62,8 +62,14 @@ Route::middleware('auth:airlock')->put('/tasks/{task}',  function (Request $requ
 
 Route::middleware('auth:airlock')->get('/tasks/{client_id}', function (Request $request, $client_id) {
     \Log::info('Oce se api ruta task: ' . $client_id);
-    $author_id = $request->user()->authors()->first()->user_id;
-    return Task::where('client_id', $client_id)->where('author_id', $author_id)->where('status', 'new')->get();
+    $author = $request->user()->authors()->first();
+    if ($author) {
+        $author_id = $request->user()->authors()->first()->user_id;
+        return Task::where('client_id', $client_id)->where('author_id', $author_id)->where('status', 'new')->get();
+    } else {
+        // new user no author
+        return [];
+    }
 });
 
 /*Route::get('tasks', function () {
@@ -76,6 +82,41 @@ Route::middleware('auth:airlock')->post('/logout', function (Request $request) {
 
     return response('Loggedout', 200);
 });
+
+Route::post('users', function (Request $request) {
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required',
+        'device_name' => 'required'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    \Log::info('Register user: ' . $user);
+
+    if ($user) {
+        throw ValidationException::withMessages([
+            'email' => ['Email already in use.'],
+        ]);
+    }
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    $token = $user->createToken($request->device_name)->plainTextToken;
+
+    $response = [
+        'user' => $user,
+        'token' => $token,
+    ];
+
+    return response($response, 201);
+});
+
 
 Route::post('/airlock/token', function (Request $request) {
     $request->validate([

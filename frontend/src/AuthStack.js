@@ -13,6 +13,7 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ marginBottom: 24, fontSize: 18 }}>Welocome to Gopsi</Text>
       { error &&
         <Text style={{ color: 'red', marginBottom: 24 }}>{ error }</Text>
       }
@@ -24,29 +25,64 @@ function LoginScreen({ navigation }) {
         autoCapitalize = 'none'
       />
       <TextInput
-        style={{ height: 40, width: 300, borderColor: 'gray', borderWidth: 1, padding: 8, marginTop: 24 }}
+        style={{ height: 40, width: 300, borderColor: 'gray', borderWidth: 1, padding: 8, marginTop: 24, marginBottom: 24 }}
         onChangeText={text => setPassword(text)}
         placeholder="Password"
         secureTextEntry={true}
       />
       <Button
+        color="#91c49f"
         title="Login"
         onPress={() => login(email, password)}
       />
-      <Button
-        title="Go to Register"
-        onPress={() => navigation.navigate('Register')}
-      />
+      <Text style={{ marginBottom: 4, marginTop: 4 }}>or</Text>
+      <Text style={{color: 'blue'}} onPress={() => navigation.navigate('Register')}>
+        Register
+      </Text>
     </View>
   );
 }
 
 function RegisterScreen({ navigation }) {
+  const { register, error } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Register Screen</Text>
-      <Button title="Go to Login" onPress={() => navigation.navigate('Login')} />
-      {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
+      <Text style={{ marginBottom: 24, padding: 8, fontSize: 18 }}>Register to Gopsi</Text>
+      <Text style={{ marginBottom: 24, textAlign: 'center', paddingLeft: 28, paddingRight: 28, color: 'gray' }}>Your Gopsi trainer will use this email address to create tasks for you.</Text>
+      { error &&
+        <Text style={{ color: 'red', marginBottom: 24 }}>{ error }</Text>
+      }
+      <TextInput
+        style={{ height: 40, width: 300, borderColor: 'gray', borderWidth: 1, padding: 8 }}
+        onChangeText={text => setName(text)}
+        placeholder="Name"
+      />
+      <TextInput
+        style={{ height: 40, width: 300, borderColor: 'gray', borderWidth: 1, padding: 8, marginTop: 24 }}
+        onChangeText={text => setEmail(text)}
+        placeholder="Email"
+        textContentType="emailAddress"
+        autoCapitalize = 'none'
+      />
+      <TextInput
+        style={{ height: 40, width: 300, borderColor: 'gray', borderWidth: 1, padding: 8, marginTop: 24, marginBottom: 24 }}
+        onChangeText={text => setPassword(text)}
+        placeholder="Password"
+        secureTextEntry={true}
+      />
+      <Button
+        color="#91c49f"
+        title="    Register    "
+        onPress={() => register(name, email, password)}
+      />
+      <Text style={{ marginBottom: 4, marginTop: 4 }}>or</Text>
+      <Text style={{color: 'blue'}} onPress={() => navigation.navigate('Login')}>
+        Login
+      </Text>
     </View>
   );
 }
@@ -59,3 +95,23 @@ export const AuthStack = () => {
     </Stack.Navigator>
   )
 }
+
+/*const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 10,
+    elevation: 2
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  buttonTextStyle: {
+    marginLeft: 10,
+    marginRight: 10,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  }
+});*/

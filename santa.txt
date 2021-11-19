@@ -28,14 +28,15 @@
 - web: encode tasks in database
 + mob: reminder for repeating task trigger notification after 24h
 - mob: new task added notification
-- mob: register client by mob
++ mob: register client by mob
 + mob: make spinner spin after pressing complete (prevent double press)
 - mob: client should be able to select one author
 - mob: add delete done taks
 - mob: done task to say: "Completed on May 14, 2021."
 - mob: make task counter popup notes with date
 - mob: maybe revert to use react-native-vector-icons
-
+- mob: forgot password link
+- mob: Logout to become profile button that opens new profile screen (and logout should be there)
 
 php artisan make:migration create_authors_users_table
 	

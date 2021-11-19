@@ -113,11 +113,12 @@ function Done() {
 }
 
 export const DoneStack = () => {
+  const { logout } = useContext(AuthContext);
   return (
     <Stack.Navigator initialRouteName="Done">
       <Stack.Screen 
-      name="Gopsi" 
-      options={{
+        name="Gopsi" 
+        options={{
           headerRight: () => {
             return (
               <TouchableOpacity

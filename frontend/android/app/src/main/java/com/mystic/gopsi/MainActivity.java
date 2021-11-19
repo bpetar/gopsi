@@ -1,4 +1,4 @@
-package com.gopsi1;
+package com.mystic.gopsi;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "gopsi1";
+    return "gopsi";
   }
 }
