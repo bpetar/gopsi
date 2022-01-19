@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Task;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * NOTE: THIS IS NOT USED!!
      *
      * @return \Illuminate\Http\Response
      */
@@ -22,11 +25,11 @@ class TaskController extends Controller
         }
 
         // check if author logged in
-        if (!Auth::user()->author)
+        /*if (!Auth::user()->author)
         {
             dd('there was problem saying you are not author');
             return;
-        }
+        }*/
 
         $tasks = Task::where('author_id', Auth::user()->id)->get();
 
@@ -75,6 +78,10 @@ class TaskController extends Controller
         $inss['client_notes'] = '';
         $inss['author_id'] = Auth::user()->id;
 
+        // encrypting for extra security
+        $inss['description'] = Crypt::encryptString($inss['description']);
+        $inss['title'] = Crypt::encryptString($inss['title']);
+
         // CHECK REPEAT IS INTEGER
         $value = $inss['repeat'];
         $strVal = strval(intval($value));
@@ -100,6 +107,24 @@ class TaskController extends Controller
     {
         // find specified task
         $task = Task::findOrFail($id);
+
+        // Decrypt sensitive data from DB
+        if ($task['title']) {
+            try {
+                $decryptedTitle = Crypt::decryptString($task['title']);
+            } catch (DecryptException $e) {
+                $decryptedTitle = "Task title was corrupted!";
+            }
+            $task['title'] = $decryptedTitle;
+        }
+        if ($task['description']) {
+            try {
+                $decryptedDescription = Crypt::decryptString($task['description']);
+            } catch (DecryptException $e) {
+                $decryptedDescription = "Task description was corrupted!";
+            }
+            $task['description'] = $decryptedDescription;
+        }
 
         return view('tasks.show', compact('task'));
     }
@@ -134,6 +159,32 @@ class TaskController extends Controller
         {
             dd('there was problem saying you are not author of this task');
             return;
+        }
+
+        // Decrypt sensitive data from DB
+        if ($task['title']) {
+            try {
+                $decryptedTitle = Crypt::decryptString($task['title']);
+            } catch (DecryptException $e) {
+                $decryptedTitle = "Task title was corrupted!";
+            }
+            $task['title'] = $decryptedTitle;
+        }
+        if ($task['description']) {
+            try {
+                $decryptedDescription = Crypt::decryptString($task['description']);
+            } catch (DecryptException $e) {
+                $decryptedDescription = "Task description was corrupted!";
+            }
+            $task['description'] = $decryptedDescription;
+        }
+        if ($task['client_notes']) {
+            try {
+                $decryptedCN = Crypt::decryptString($task['client_notes']);
+            } catch (DecryptException $e) {
+                $decryptedCN = "Task client notes were corrupted!";
+            }
+            $task['client_notes'] = $decryptedCN;
         }
 
         return view('tasks.edit', compact('task'));
@@ -172,6 +223,8 @@ class TaskController extends Controller
             return;
         }
 
+        //dd($request->all());
+
         // CHECK REPEAT IS INTEGER
         $inss = $request->all();
         $value = $inss['repeat'];
@@ -180,6 +233,10 @@ class TaskController extends Controller
         if ($strVal != $intVal) {
             $inss['repeat'] = 0;
         }
+
+        // encrypting for extra security
+        $inss['description'] = Crypt::encryptString($inss['description']);
+        $inss['title'] = Crypt::encryptString($inss['title']);
 
         // update it
         $task->update($inss);

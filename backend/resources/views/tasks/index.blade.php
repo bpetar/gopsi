@@ -6,7 +6,7 @@
 <div class="w3-content" style="max-width:1400px;display:block;background-attachment: fixed;background-size:cover; width:100%;background-position:fixed;">
  <div class="w3-row">
   @if (auth()->check())
-  @if (auth()->user()->id == 1  || auth()->user()->author)
+  @if (auth()->user()->id == 1)
   <p style="text-align: center;"><b><a href="/task/create" > [Add New Task] </a><b></p>
     @endif
     @endif

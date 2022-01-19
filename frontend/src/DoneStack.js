@@ -105,7 +105,7 @@ function Done() {
           onRefresh={onRefresh}
         />
       }>
-        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+        <View style={{flex: 1, alignItems: "center", marginTop: 32, justifyContent: "center"}}>
           <Text>No tasks at the moment.</Text>
         </View>
       </ScrollView>

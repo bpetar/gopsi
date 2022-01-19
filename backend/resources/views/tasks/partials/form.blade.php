@@ -9,7 +9,7 @@
 	<label for="title" class="col-md-4 control-label">Title</label>
 
 	<div class="col-md-6">
-	    {!! Form::text('title', null, array('class' => 'form-control', 'placeholder'=> 'Enter title here..')) !!}
+	    {!! Form::text('title', null, array('class' => 'form-control', 'placeholder'=> 'Enter title here..', 'required' => 'required')) !!}
 
 	    @if ($errors->has('title'))
 	        <span class="help-block">
@@ -25,7 +25,7 @@
 	<label for="description" class="col-md-4 control-label">Description</label>
 
 	<div class="col-md-6">
-	    {!! Form::text('description', null, array('class' => 'form-control', 'placeholder'=> 'Enter description here..')) !!}
+	    {!! Form::textarea('description', null, array('class' => 'form-control', 'placeholder'=> 'Enter description here..', 'rows' => 3, 'cols' => 40)) !!}
 
 	    @if ($errors->has('description'))
 	        <span class="help-block">

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Author;
 use App\Task;
 use App\User;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class HomeController extends Controller
 {
@@ -55,11 +57,65 @@ class HomeController extends Controller
 
         $archived_client = false;
         foreach ($archivedArr as $archived) {
-            # code...
             if ($archived->id == $client->id) {
                 $archived_client = true;
             }
         }
+
+        // Decrypt crucial values from DB
+        foreach ($active as $activeTask) {
+            if ($activeTask->title) {
+                try {
+                    $decryptedTitle = Crypt::decryptString($activeTask->title);
+                } catch (DecryptException $e) {
+                    $decryptedTitle = "Task title was corrupted!";
+                }
+                $activeTask->title = $decryptedTitle;
+            }
+            if ($activeTask->description) {
+                try {
+                    $decryptedDescription = Crypt::decryptString($activeTask->description);
+                } catch (DecryptException $e) {
+                    $decryptedDescription = "Task description was corrupted!";
+                }
+                $activeTask->description = $decryptedDescription;
+            }
+            if ($activeTask->client_notes) {
+                try {
+                    $decryptedCN = Crypt::decryptString($activeTask->client_notes);
+                } catch (DecryptException $e) {
+                    $decryptedCN = "Task client notes were corrupted!";
+                }
+                $activeTask->client_notes = $decryptedCN;
+            }
+        }
+        foreach ($done as $doneTask) {
+            if ($doneTask->title) {
+                try {
+                    $decryptedTitle = Crypt::decryptString($doneTask->title);
+                } catch (DecryptException $e) {
+                    $decryptedTitle = "Task title was corrupted!";
+                }
+                $doneTask->title = $decryptedTitle;
+            }
+            if ($doneTask->description) {
+                try {
+                    $decryptedDescription = Crypt::decryptString($doneTask->description);
+                } catch (DecryptException $e) {
+                    $decryptedDescription = "Task description was corrupted!";
+                }
+                $doneTask->description = $decryptedDescription;
+            }
+            if ($doneTask->client_notes) {
+                try {
+                    $decryptedCN = Crypt::decryptString($doneTask->client_notes);
+                } catch (DecryptException $e) {
+                    $decryptedCN = "Task client notes were corrupted!";
+                }
+                $doneTask->client_notes = $decryptedCN;
+            }
+        }
+
         return view('client', compact('client', 'active', 'done', 'archived_client'));
     }
 

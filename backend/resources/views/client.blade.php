@@ -34,7 +34,7 @@
                             <div class="card" style="margin-bottom:10px;">
                                 <div class="card-header" style="background-color: lightgreen;">{{$task->title}}</div>
                                 <div class="card-body pera">
-                                    <p>{{$task->description}}</p>
+                                    <p>{!! nl2br(e($task->description)) !!}</p>
                                     <p>Client notes: </p>
                                     <p style="padding: 5px; border: solid 1px lightgreen;"><span style="color: green;">
                                         @if ($task->client_notes)
@@ -69,7 +69,7 @@
                             <div class="card" style="margin-bottom:10px;">
                                 <div class="card-header" style="background-color: lightgreen;">{{$task->title}}</div>
                                 <div class="card-body pera">
-                                    <p>{{$task->description}}</p>
+                                    <p>{!! nl2br(e($task->description)) !!}</p>
                                     <p>Client notes: </p>
                                     <p style="padding: 5px; border: solid 1px lightgreen;"><span style="color: green;">
                                         @if ($task->client_notes)
